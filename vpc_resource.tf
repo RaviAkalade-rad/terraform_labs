@@ -1,9 +1,12 @@
+//vpc and subnet creation
+
 resource "aws_vpc" "tfvpc01"{
     tags = { "Name" = "TFVPC01"}
 
     cidr_block = "10.10.0.0/16"
 
 }
+
 
 resource "aws_subnet" "public_subnet" {
         tags = { "Name" = "Public-Subnet"}
@@ -22,6 +25,8 @@ resource "aws_subnet" "private_subnet" {
         availability_zone = "us-east-1b"
   
 }
+
+//security group 
 
 resource "aws_security_group" "sg_for_webserver" {
 
@@ -54,27 +59,8 @@ resource "aws_security_group" "sg_for_webserver" {
 }
 
 
-
+//webservers
   
-resource "aws_instance" "webserver02" {
-    tags = {
-        "Name" = "TFWebServer02"
-        }
-
-    ami = "ami-0eaf7c3456e7b5b68"
-    instance_type = "t2.micro"
-    key_name = "Linux_serverKeypair"
-    
-    
-
-    subnet_id = aws_subnet.private_subnet.id
-
-    user_data = "/scripts/app-install.sh"
-    
-   
-
-}
-
 resource "aws_instance" "webserver01" {
     tags = {
         "Name" = "TFWebServer01"
@@ -90,7 +76,22 @@ resource "aws_instance" "webserver01" {
 
     user_data = "/scripts/app-install.sh"
    
+}  
+resource "aws_instance" "webserver02" {
+    tags = {
+        "Name" = "TFWebServer02"
+        }
+
+    ami = "ami-0eaf7c3456e7b5b68"
+    instance_type = "t2.micro"
+    key_name = "Linux_serverKeypair"
+     
+    subnet_id = aws_subnet.private_subnet.id   
+
 }
+
+//route table and association
+
 resource "aws_route_table" "route_private" {
     tags = {
       "Name"= "route_private"
@@ -121,6 +122,9 @@ resource "aws_default_route_table" "example" {
   }
 
 }
+
+//load balancer & target group attachment
+
 resource "aws_lb" "applb_01" {
 
 name = "Appl-load-bal"

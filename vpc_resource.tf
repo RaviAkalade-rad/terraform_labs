@@ -74,7 +74,10 @@ resource "aws_instance" "webserver01" {
     associate_public_ip_address = "true"
     security_groups = [aws_security_group.sg_for_webserver.id]
 
-    user_data = "/scripts/app-install.sh"
+    
+    //user_data = file("${path.module}/scripts/app1-install.sh")
+     //user_data = file("/scripts/app1-install.sh")
+     user_data = "/scripts/app-install.sh"
    
 }  
 resource "aws_instance" "webserver02" {
@@ -124,7 +127,7 @@ resource "aws_default_route_table" "example" {
 }
 
 //load balancer & target group attachment
-
+/*
 resource "aws_lb" "applb_01" {
 
 name = "Appl-load-bal"
@@ -167,3 +170,17 @@ default_action {
 
   
 }
+*/
+/*
+resource "aws_instance" "lnx_web_server" {
+  ami = "ami-0742b4e673072066f"
+  instance_type = "t2.micro"
+  //user_data = file("${path.module}/script/app1-install.sh")
+  //user_data = file("/script/app1-install.sh")
+  user_data = "/script/app1-install.sh"
+
+  tags = {
+    "Name" = "Nova-WebServer"
+  }
+}
+*/

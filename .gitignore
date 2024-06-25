@@ -1,0 +1,8 @@
+
+*terraform-provider-aws_v5.54.1_x5.exe
+*.terraform
+*.tfstate
+*.terraform.lock.hcl
+*.exe
+/*.exe
+*.txt

@@ -127,7 +127,7 @@ resource "aws_default_route_table" "example" {
 }
 
 //load balancer & target group attachment
-/*
+
 resource "aws_lb" "applb_01" {
 
 name = "Appl-load-bal"
@@ -170,7 +170,7 @@ default_action {
 
   
 }
-*/
+
 /*
 resource "aws_instance" "lnx_web_server" {
   ami = "ami-0742b4e673072066f"

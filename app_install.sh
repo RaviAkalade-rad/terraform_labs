@@ -1,10 +1,6 @@
-#! /bin/bash
-# Instance Identity Metadata Reference - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
-sudo yum update -y
-sudo yum install -y httpd
-sudo systemctl enable httpd
-sudo service httpd start  
-sudo echo '<h1>Terraform is Awesome..</h1>' | sudo tee /var/www/html/index.html
-sudo mkdir /var/www/html/app1
-sudo echo '<!DOCTYPE html> <html> <body style="background-color:rgb(250, 210, 210);"> <h1>Welcome to Terraform Bootcamp</h1> <p>Novatec IT Consulting</p> <p>Application Version: v1</p> </body></html>' | sudo tee /var/www/html/app1/index.html
-sudo curl http://169.254.169.254/latest/dynamic/instance-identity/document -o /var/www/html/app1/metadata.html
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl enable httpd
+service httpd start  
+echo '<h1>Terraform is Awesome..</h1>' | sudo tee /var/www/html/index.html

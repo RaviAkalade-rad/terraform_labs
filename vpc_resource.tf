@@ -75,9 +75,18 @@ resource "aws_instance" "webserver01" {
     security_groups = [aws_security_group.sg_for_webserver.id]
 
     
-    //user_data = file("${path.module}/scripts/app1-install.sh")
-     //user_data = file("/scripts/app1-install.sh")
-     user_data = "/scripts/app-install.sh"
+    //user_data = file("${path.module}/app-install.sh")
+     //user_data = file("/scripts/app-install.sh")
+     //user_data = "/scripts/app-install.sh"
+    
+     user_data = <<-EOF
+      #!/bin/bash
+      sudo yum update -y
+      sudo yum install httpd -y
+      sudo systemctl enable httpd
+      sudo systemctl start httpd
+      echo "<h1>Welcome to Terraform BootCamp ! AWS Infra created using Terraform in us-east-1 Region</h1>" > /var/www/html/index.html
+      EOF
    
 }  
 resource "aws_instance" "webserver02" {
@@ -116,6 +125,7 @@ resource "aws_route_table_association" "rta_private" {
   
 }
 
+/*
 resource "aws_default_route_table" "example" {
   default_route_table_id = aws_vpc.tfvpc01.default_route_table_id
 
@@ -124,7 +134,39 @@ resource "aws_default_route_table" "example" {
     gateway_id = aws_internet_gateway.igw_rt.id
   }
 
+}*/
+
+data "aws_route_table" "main_rt" {
+
+    vpc_id = aws_vpc.tfvpc01.id
+    
+  filter{
+     name= "association.main"
+     values = [true]
+    
+
+    //"Name=association.main,Values=true
+  }
+
 }
+
+
+resource "aws_route_table_association" "rta_public" {
+        subnet_id = aws_subnet.public_subnet.id
+        route_table_id = data.aws_route_table.main_rt.id  
+  
+}
+
+resource "aws_route" "ig_pub_rout" {
+
+  route_table_id = data.aws_route_table.main_rt.id
+  gateway_id = aws_internet_gateway.igw_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  
+}
+
+
+
 
 //load balancer & target group attachment
 
@@ -166,7 +208,7 @@ default_action {
     type = "forward"
     target_group_arn = aws_alb_target_group.alb_target_grp.id
 
-}
+  }
 
   
 }
@@ -175,12 +217,14 @@ default_action {
 resource "aws_instance" "lnx_web_server" {
   ami = "ami-0742b4e673072066f"
   instance_type = "t2.micro"
-  //user_data = file("${path.module}/script/app1-install.sh")
+  //user_data = file("${path.module}/script/app-install.sh")
+  //user_data = file("$./script/app-install.sh")
   //user_data = file("/script/app1-install.sh")
-  user_data = "/script/app1-install.sh"
+  //user_data = "/script/app1-install.sh"
 
   tags = {
     "Name" = "Nova-WebServer"
   }
 }
+
 */

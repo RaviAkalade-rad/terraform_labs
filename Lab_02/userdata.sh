@@ -1,5 +1,5 @@
 #!/bin/bash
-amazon-linux-extras install docker
+yum install docker -y
 service docker start
 usermod -a -G docker ec2-user
 chkconfig docker on
@@ -8,3 +8,6 @@ sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-c
 -o /usr/local/bin/docker-compose
 mv /usr/local/bin/docker-compose /usr/bin/docker-compose
 chmod +x /usr/bin/docker-compose
+docker pull jenkins/jenkins
+docker pull httpd
+docker run -dit --name my-running-app -p 4001:80 httpd
